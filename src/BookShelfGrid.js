@@ -1,23 +1,11 @@
 import React, { Component } from 'react';
-import * as BooksAPI from './BooksAPI';
 import PropTypes from 'prop-types';
+import BookShelfChanger from './BookShelfChanger';
 
 class BookShelfGrid extends Component {
   static propTypes = {
     books: PropTypes.array.isRequired,
     onChangeShelf: PropTypes.func.isRequired
-  };
-
-  updateShelf = (newShelf, idBook) => {
-    const { books, onChangeShelf } = this.props;
-
-    BooksAPI.get(idBook).then(book => {
-      BooksAPI.update(book, newShelf).then(() => {
-        book.shelf = newShelf;
-        let newBooks = books.filter(b => b.id !== book.id).concat(book);
-        onChangeShelf(newBooks);
-      });
-    });
   };
 
   render() {
@@ -38,23 +26,11 @@ class BookShelfGrid extends Component {
                       backgroundImage: `url(${book.imageLinks.smallThumbnail})`
                     }}
                   />
-                  <div className="book-shelf-changer">
-                    <select
-                      onChange={event =>
-                        this.updateShelf(event.target.value, `${book.id}`)
-                      }
-                    >
-                      <option value="none" disabled>
-                        Move to...
-                      </option>
-                      <option value="currentlyReading">
-                        Currently Reading
-                      </option>
-                      <option value="wantToRead">Want to Read</option>
-                      <option value="read">Read</option>
-                      <option value="none">None</option>
-                    </select>
-                  </div>
+                  <BookShelfChanger
+                    onChangeShelf={this.props.onChangeShelf}
+                    books={this.props.books}
+                    book={book}
+                  />
                 </div>
                 <div className="book-title">{book.title}</div>
                 <div className="book-authors">{book.authors}</div>
