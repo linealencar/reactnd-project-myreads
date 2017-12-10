@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-// import * as BooksAPI from './BooksAPI';
 import BookShelfGrid from './BookShelfGrid';
 
 class ListBook extends Component {
   static propTypes = {
-    books: PropTypes.array.isRequired
+    books: PropTypes.array.isRequired,
+    onChangeShelf: PropTypes.func.isRequired
   };
 
   render() {
@@ -27,15 +27,27 @@ class ListBook extends Component {
           <div>
             <div className="bookshelf">
               <h2 className="bookshelf-title">Currently Reading</h2>
-              <BookShelfGrid shelf={currentlyReading} />
+              <BookShelfGrid
+                onChangeShelf={this.props.onChangeShelf}
+                shelf={currentlyReading}
+                books={this.props.books}
+              />
             </div>
             <div className="bookshelf">
               <h2 className="bookshelf-title">Want to Read</h2>
-              <BookShelfGrid shelf={wantToRead} />
+              <BookShelfGrid
+                onChangeShelf={this.props.onChangeShelf}
+                shelf={wantToRead}
+                books={this.props.books}
+              />
             </div>
             <div className="bookshelf">
               <h2 className="bookshelf-title">Read</h2>
-              <BookShelfGrid shelf={read} />
+              <BookShelfGrid
+                onChangeShelf={this.props.onChangeShelf}
+                shelf={read}
+                books={this.props.books}
+              />
             </div>
           </div>
           <div className="open-search">
