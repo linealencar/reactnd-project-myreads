@@ -1,19 +1,35 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-// import escapeRegExp from 'escape-string-regexp';
+import BookShelfGrid from './BookShelfGrid';
+import * as BooksAPI from './BooksAPI';
 
 class SearchBook extends Component {
   state = {
-    query: ''
+    query: '',
+    queryBooks: []
   };
 
   updateQuery = query => {
-    this.setState({ query: query.trim() });
-  };
-  render() {
-    const { query } = this.state;
+    const { books } = this.props;
 
-    // let showingBooks;
+    this.setState({ query: query.trim() });
+
+    BooksAPI.search(query).then(searchBooks => {
+      const queryBooks = searchBooks.map(searchBook => {
+        const foundBook = books.find(book => book.id === searchBook.id);
+        if (foundBook) {
+          searchBook.shelf = foundBook.shelf;
+        }
+        //searchBook.shelf = 'none';
+        return searchBook;
+      });
+      this.setState({ queryBooks });
+    });
+  };
+
+  render() {
+    const { query, queryBooks } = this.state;
+    const { books } = this.props;
 
     return (
       <div className="search-books">
@@ -21,16 +37,8 @@ class SearchBook extends Component {
           <Link className="close-search" to="/">
             Close
           </Link>
-          {JSON.stringify(this.state)}
+          {/* {JSON.stringify(this.state)} */}
           <div className="search-books-input-wrapper">
-            {/*
-                  NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                  You can find these search terms here:
-                  https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-                  However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                  you don't find a specific author or title. Every search is limited by search terms.
-                */}
             <input
               type="text"
               placeholder="Search by title or author"
@@ -40,7 +48,11 @@ class SearchBook extends Component {
           </div>
         </div>
         <div className="search-books-results">
-          <ol className="books-grid" />
+          <BookShelfGrid
+            onChangeShelf={this.props.onChangeShelf}
+            shelf={queryBooks}
+            books={books}
+          />
         </div>
       </div>
     );
