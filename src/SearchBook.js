@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import BookShelfGrid from './BookShelfGrid';
 import * as BooksAPI from './BooksAPI';
+import { Debounce } from 'react-throttle';
 
 class SearchBook extends Component {
   state = {
@@ -12,15 +13,16 @@ class SearchBook extends Component {
   updateQuery = query => {
     const { books } = this.props;
 
-    this.setState({ query: query.trim() });
+    this.setState({ query });
 
     BooksAPI.search(query).then(searchBooks => {
       const queryBooks = searchBooks.map(searchBook => {
         const foundBook = books.find(book => book.id === searchBook.id);
         if (foundBook) {
           searchBook.shelf = foundBook.shelf;
+        } else {
+          searchBook.shelf = 'none';
         }
-        //searchBook.shelf = 'none';
         return searchBook;
       });
       this.setState({ queryBooks });
@@ -39,12 +41,13 @@ class SearchBook extends Component {
           </Link>
           {/* {JSON.stringify(this.state)} */}
           <div className="search-books-input-wrapper">
-            <input
-              type="text"
-              placeholder="Search by title or author"
-              value={query}
-              onChange={event => this.updateQuery(event.target.value)}
-            />
+            <Debounce time="400" handler="onChange">
+              <input
+                type="text"
+                placeholder="Search by title or author"
+                onChange={event => this.updateQuery(event.target.value)}
+              />
+            </Debounce>
           </div>
         </div>
         <div className="search-books-results">
