@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import BookShelfChanger from './BookShelfChanger';
+import PropTypes from 'prop-types';
 
 class BookShelfGrid extends Component {
   static propTypes = {
     books: PropTypes.array.isRequired,
-    onChangeShelf: PropTypes.func.isRequired
+    onChangeShelf: PropTypes.func.isRequired,
+    onAlert: PropTypes.func.isRequired
   };
-
   render() {
-    const { shelf } = this.props;
+    const { shelf, books, onChangeShelf, onAlert } = this.props;
 
     return (
       <div className="bookshelf-books">
@@ -27,8 +27,9 @@ class BookShelfGrid extends Component {
                     }}
                   />
                   <BookShelfChanger
-                    onChangeShelf={this.props.onChangeShelf}
-                    books={this.props.books}
+                    onChangeShelf={onChangeShelf}
+                    onAlert={onAlert}
+                    books={books}
                     book={book}
                   />
                 </div>

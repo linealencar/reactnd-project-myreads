@@ -6,17 +6,17 @@ import BookShelfGrid from './BookShelfGrid';
 class ListBook extends Component {
   static propTypes = {
     books: PropTypes.array.isRequired,
-    onChangeShelf: PropTypes.func.isRequired
+    onChangeShelf: PropTypes.func.isRequired,
+    onAlert: PropTypes.func.isRequired
   };
 
   render() {
-    let currentlyReading = this.props.books.filter(
+    const { books, onChangeShelf, onAlert } = this.props;
+    let currentlyReading = books.filter(
       book => book.shelf === 'currentlyReading'
     );
-    let wantToRead = this.props.books.filter(
-      book => book.shelf === 'wantToRead'
-    );
-    let read = this.props.books.filter(book => book.shelf === 'read');
+    let wantToRead = books.filter(book => book.shelf === 'wantToRead');
+    let read = books.filter(book => book.shelf === 'read');
 
     return (
       <div className="list-books">
@@ -28,25 +28,28 @@ class ListBook extends Component {
             <div className="bookshelf">
               <h2 className="bookshelf-title">Currently Reading</h2>
               <BookShelfGrid
-                onChangeShelf={this.props.onChangeShelf}
+                onChangeShelf={onChangeShelf}
+                onAlert={onAlert}
                 shelf={currentlyReading}
-                books={this.props.books}
+                books={books}
               />
             </div>
             <div className="bookshelf">
               <h2 className="bookshelf-title">Want to Read</h2>
               <BookShelfGrid
-                onChangeShelf={this.props.onChangeShelf}
+                onChangeShelf={onChangeShelf}
+                onAlert={onAlert}
                 shelf={wantToRead}
-                books={this.props.books}
+                books={books}
               />
             </div>
             <div className="bookshelf">
               <h2 className="bookshelf-title">Read</h2>
               <BookShelfGrid
-                onChangeShelf={this.props.onChangeShelf}
+                onChangeShelf={onChangeShelf}
+                onAlert={onAlert}
                 shelf={read}
-                books={this.props.books}
+                books={books}
               />
             </div>
           </div>

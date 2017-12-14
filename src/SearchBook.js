@@ -3,11 +3,18 @@ import { Link } from 'react-router-dom';
 import BookShelfGrid from './BookShelfGrid';
 import * as BooksAPI from './BooksAPI';
 import { Debounce } from 'react-throttle';
+import PropTypes from 'prop-types';
 
 class SearchBook extends Component {
   state = {
     query: '',
     queryBooks: []
+  };
+
+  static propTypes = {
+    books: PropTypes.array.isRequired,
+    onChangeShelf: PropTypes.func.isRequired,
+    onAlert: PropTypes.func.isRequired
   };
 
   updateQuery = query => {
@@ -30,8 +37,8 @@ class SearchBook extends Component {
   };
 
   render() {
-    const { query, queryBooks } = this.state;
-    const { books } = this.props;
+    const { queryBooks } = this.state;
+    const { books, onChangeShelf, onAlert } = this.props;
 
     return (
       <div className="search-books">
@@ -52,7 +59,8 @@ class SearchBook extends Component {
         </div>
         <div className="search-books-results">
           <BookShelfGrid
-            onChangeShelf={this.props.onChangeShelf}
+            onChangeShelf={onChangeShelf}
+            onAlert={onAlert}
             shelf={queryBooks}
             books={books}
           />

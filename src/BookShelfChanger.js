@@ -1,15 +1,23 @@
 import React, { Component } from 'react';
 import * as BooksAPI from './BooksAPI';
+import PropTypes from 'prop-types';
 
 class BookShellfChanger extends Component {
+  static propTypes = {
+    books: PropTypes.array.isRequired,
+    onChangeShelf: PropTypes.func.isRequired,
+    onAlert: PropTypes.func.isRequired
+  };
+
   updateShelf = (newShelf, idBook) => {
-    const { books, onChangeShelf } = this.props;
+    const { books, onChangeShelf, onAlert } = this.props;
 
     BooksAPI.get(idBook).then(book => {
       BooksAPI.update(book, newShelf).then(() => {
         book.shelf = newShelf;
         let newBooks = books.filter(b => b.id !== book.id).concat(book);
         onChangeShelf(newBooks);
+        onAlert();
       });
     });
   };
