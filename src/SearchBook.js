@@ -24,11 +24,12 @@ class SearchBook extends Component {
 
     BooksAPI.search(query).then(searchBooks => {
       const queryBooks = searchBooks.map(searchBook => {
-        const foundBook = books.find(book => book.id === searchBook.id);
-        if (foundBook) {
-          searchBook.shelf = foundBook.shelf;
-        } else {
-          searchBook.shelf = 'none';
+        for (const book of books) {
+          if (book.id === searchBook.id) {
+            searchBook.shelf = book.shelf;
+          } else {
+            searchBook.shelf = 'none';
+          }
         }
         return searchBook;
       });
