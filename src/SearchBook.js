@@ -25,19 +25,24 @@ class SearchBook extends Component {
     const { books } = this.props;
     this.setState({ query });
 
-    BooksAPI.search(query).then(searchBooks => {
-      const queryBooks = searchBooks.map(searchBook => {
-        for (const book of books) {
-          if (book.id === searchBook.id) {
-            searchBook.shelf = book.shelf;
-          } else {
-            searchBook.shelf = 'none';
+    BooksAPI.search(query)
+      .then(searchBooks => {
+        const queryBooks = searchBooks.map(searchBook => {
+          for (const book of books) {
+            if (book.id === searchBook.id) {
+              searchBook.shelf = book.shelf;
+            } else {
+              searchBook.shelf = 'none';
+            }
           }
-        }
-        return searchBook;
+          return searchBook;
+        });
+        this.setState({ queryBooks });
+      })
+      .catch(() => {
+        this.setState({ queryBooks: [] });
+        return;
       });
-      this.setState({ queryBooks });
-    });
   };
 
   render() {
