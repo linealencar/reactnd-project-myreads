@@ -9,16 +9,14 @@ class BookShellfChanger extends Component {
     onAlert: PropTypes.func.isRequired
   };
 
-  updateShelf = (newShelf, idBook) => {
+  updateShelf = (newShelf, book) => {
     const { books, onChangeShelf, onAlert } = this.props;
 
-    BooksAPI.get(idBook).then(book => {
-      BooksAPI.update(book, newShelf).then(() => {
-        book.shelf = newShelf;
-        let newBooks = books.filter(b => b.id !== book.id).concat(book);
-        onChangeShelf(newBooks);
-        onAlert();
-      });
+    BooksAPI.update(book, newShelf).then(() => {
+      book.shelf = newShelf;
+      let newBooks = books.filter(b => b.id !== book.id).concat(book);
+      onChangeShelf(newBooks);
+      onAlert();
     });
   };
 
@@ -28,7 +26,7 @@ class BookShellfChanger extends Component {
       <div className="book-shelf-changer">
         <select
           value={book.shelf}
-          onChange={event => this.updateShelf(event.target.value, `${book.id}`)}
+          onChange={event => this.updateShelf(event.target.value, book)}
         >
           <option value="none" disabled>
             Move to...
